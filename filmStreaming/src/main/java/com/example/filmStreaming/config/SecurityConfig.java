@@ -99,7 +99,7 @@ public class SecurityConfig {
         {
             // Kiểm tra xem có người dùng admin nào tồn tại không
 
-            if (ourUserRepository.findByEmail("admin@1234").isEmpty()) {
+            if (ourUserRepository.findByEmail("admin@123").isEmpty()) {
                 // Nếu không có, tạo một người dùng admin mặc định
                 OurUsers admin = new OurUsers(
                         "phuc", // Tên người dùng admin

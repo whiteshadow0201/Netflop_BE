@@ -32,6 +32,13 @@ public class Film {
     )
     private String path;
 
+    @Column(
+            name = "description",
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
+
+    private String description;
 
     public Film(String filmName, String path) {
         this.filmName = filmName;
