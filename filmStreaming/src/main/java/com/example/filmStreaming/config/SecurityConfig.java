@@ -60,13 +60,14 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
-        corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
-                "Accept", "Authorization", "X-Requested-With",
-                "Access-Control-Request-Method", "Access-Control-Request-Headers","Access-Control-Allow-Headers"));
-        corsConfiguration.setExposedHeaders(Arrays.asList("Origin", "Content-Type", "Accept",
-                "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Access-Control-Allow-Credentials"));
-        corsConfiguration.setAllowedMethods(Arrays.asList("Access-Control-Allow-Methods",
+        corsConfiguration.setAllowedOrigins(Arrays.asList("https://netflop.rf.gd"));
+        corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
+//        corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
+//                "Accept", "Authorization", "X-Requested-With",
+//                "Access-Control-Request-Method", "Access-Control-Request-Headers","Access-Control-Allow-Headers"));
+//        corsConfiguration.setExposedHeaders(Arrays.asList("Origin", "Content-Type", "Accept",
+//                "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Access-Control-Allow-Credentials"));
+        corsConfiguration.setAllowedMethods(Arrays.asList("HEAD",
                 "GET", "POST", "PUT", "DELETE", "OPTIONS"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);

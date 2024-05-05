@@ -50,7 +50,7 @@ public class AuthService
                 ourUsers.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
                 ourUsers.setRole("user");
                 OurUsers ourUserResult = ourUsersRepository.save(ourUsers);
-                if (ourUserResult !=null && ourUserResult.getId() > 0)
+                if (ourUserResult.getId() > 0)
                 {
                     resp.setOurUsers(ourUserResult);
                     resp.setMessage("User Registered Successfully");
@@ -75,10 +75,8 @@ public class AuthService
            var user = ourUsersRepository.findByEmail(signInRequest.getEmail()).orElseThrow();
            System.out.println(user);
            var jwt = jwtUtils.generateToken(user);
-           var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(),user);
            response.setStatusCode(200);
            response.setToken(jwt);
-           response.setRefreshToken(refreshToken);
            response.setExpirationTime("12hrs"); // 12 hours
            response.setMessage("User Logged in Successfully");
 
@@ -88,21 +86,4 @@ public class AuthService
         }
         return response;
     }
-
-//    public ReqRes refreshToken (ReqRes refreshTokenRequest)
-//    {
-//        ReqRes response = new ReqRes();
-//        String ourEmail = jwtUtils.extractUsername(refreshTokenRequest.getRefreshToken());
-//        OurUsers users = ourUsersRepository.findByEmail(ourEmail).orElseThrow();
-//        if (jwtUtils.isTokenValid(refreshTokenRequest.getToken(), users)){
-//            var jwt = jwtUtils.generateToken(users);
-//            response.setStatusCode(200);
-//            response.setToken(jwt);
-//            response.setExpirationTime("12hrs");
-//            response.setMessage("Token Refreshed Successfully");
-//
-//        }
-//        response.setStatusCode(500);
-//        return response;
-//    }
 }
