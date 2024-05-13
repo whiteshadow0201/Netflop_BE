@@ -78,7 +78,9 @@ public class AuthService
            response.setStatusCode(200);
            response.setToken(jwt);
            response.setExpirationTime("12hrs"); // 12 hours
+            response.setRole(user.getRole());
            response.setMessage("User Logged in Successfully");
+           response.setName(user.getName());
 
         } catch (Exception e) {
             response.setStatusCode(500);

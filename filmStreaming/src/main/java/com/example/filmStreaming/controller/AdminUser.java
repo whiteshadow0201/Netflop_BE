@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.io.File;
@@ -22,9 +23,10 @@ public class AdminUser {
     @Autowired
     private FilmRepository filmRepository;
 
-    @PostMapping("/admin/getAllFilmsInfo")
+    @GetMapping("/user/getAllFilmsInfo")
     public ResponseEntity<Object> getAllFilms() {
-        return ResponseEntity.ok(filmRepository.findAll());
+        List<Film> films = filmRepository.findAll();
+        return ResponseEntity.ok(films);
     }
 
     @PostMapping("/user/getFilm")
@@ -35,11 +37,14 @@ public class AdminUser {
     @PostMapping("/admin/uploadFilmInfo")
     public ResponseEntity<UUID> uploadFilm(@RequestBody ReqRes filmRequest) {
 //        String storagePath = "/home/wh1t3sh4d0w/Desktop/filmList";
-        String storagePath = "/root/filmList";
+        String storagePath = "/root/HLS_File_Folder";
         Film filmToSave = new Film();
         if (filmRequest.getDescription()== null)
             filmToSave.setDescription("");
         else filmToSave.setDescription(filmRequest.getDescription());
+        if (filmRequest.getPoster()==null)
+            filmToSave.setPoster("");
+        else filmToSave.setPoster(filmRequest.getPoster());
         filmToSave.setFilmName(filmRequest.getFilmName());
         filmToSave.setPath("");
         Film savedFilm = filmRepository.save(filmToSave);
@@ -53,11 +58,10 @@ public class AdminUser {
         }
         return ResponseEntity.ok(savedFilm.getUuid());
     }
-
     @PostMapping("/admin/upload")
     public ResponseEntity<String> handleFileUpload(@RequestPart("file") MultipartFile file) {
         if (file == null) {
-            return ResponseEntity.badRequest().body("Please select a file to upload.");
+            return ResponseEntity.badRequest().body("Please select a file to upload.\n");
         }
 
         try {
@@ -69,7 +73,32 @@ public class AdminUser {
             file.transferTo(dest);
 
             // Trả về phản hồi thành công nếu upload thành công
-            return ResponseEntity.ok().body("File uploaded successfully.");
+            return ResponseEntity.ok().body("File uploaded successfully.\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file.");
+        }
+    }
+    @PostMapping("/admin/uploadPoster/{uuid}")
+    public ResponseEntity<String> handleImageUpload(@RequestPart("file") MultipartFile file, @PathVariable UUID uuid) {
+        if (file == null) {
+            return ResponseEntity.badRequest().body("Please select a file to upload.\n");
+        }
+
+        try {
+            Film updatedFilm = filmRepository.findById(uuid).orElse(null);
+            if (updatedFilm == null){
+                return ResponseEntity.ok().body("Requested film not found.\n");
+            }
+            // Xử lý tệp được tải lên ở đây
+            // Ví dụ: lưu tệp vào thư mục trên máy chủ
+            String fileName = file.getOriginalFilename();
+            String filePath = "/root/HLS_File_Folder"+ File.separator + uuid + File.separator + fileName;
+            File dest = new File(filePath);
+            file.transferTo(dest);
+            updatedFilm.setPoster(fileName);
+            // Trả về phản hồi thành công nếu upload thành công
+            return ResponseEntity.ok().body("File uploaded successfully.\n");
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file.");
@@ -90,4 +119,5 @@ public class AdminUser {
         // Trả về FileSystemResource cho tệp được yêu cầu
         return new FileSystemResource(fullPath);
     }
+
 }

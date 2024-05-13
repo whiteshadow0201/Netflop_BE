@@ -60,7 +60,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedOrigins(Arrays.asList("https://netflop.rf.gd"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("https://anotherk-atk.github.io","https://netflop.rf.gd"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
 //        corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
 //                "Accept", "Authorization", "X-Requested-With",

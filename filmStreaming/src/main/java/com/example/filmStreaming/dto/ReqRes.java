@@ -29,5 +29,7 @@ public class ReqRes {
     private String path;
     private UUID uuid;
     private String description;
+//    private String releasedDate;
+    private  String poster;
 
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.Locale;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -40,7 +41,12 @@ public class Film {
 
     private String description;
 
-
+    @Column(
+            name = "poster",
+            nullable = true,
+            columnDefinition = "TEXT"
+    )
+    private String poster;
 
 
 }
