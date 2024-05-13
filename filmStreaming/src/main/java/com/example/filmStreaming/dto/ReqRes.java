@@ -28,5 +28,8 @@ public class ReqRes {
     private List<Film> films;
     private String path;
     private UUID uuid;
+    private String description;
+//    private String releasedDate;
+    private  String poster;
 
 }

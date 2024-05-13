@@ -20,4 +20,8 @@ public interface FilmRepository extends JpaRepository<Film, UUID> {
 
     @Query("SELECT f.filmName FROM Film f WHERE f.uuid = :uuid")
     Optional<String> findFilmNameByUuid(@Param("uuid") UUID uuid);
+
+    @Query("SELECT f.poster FROM Film f WHERE f.uuid = :uuid")
+    Optional<String> findPosterExtensionByUuid(@Param("uuid") UUID uuid);
+
 }

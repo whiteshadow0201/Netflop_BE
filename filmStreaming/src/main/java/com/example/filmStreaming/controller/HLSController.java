@@ -3,10 +3,11 @@ import com.example.filmStreaming.dto.ReqRes;
 import com.example.filmStreaming.repository.FilmRepository;
 import com.example.filmStreaming.service.HLSService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
-
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hls")
@@ -19,10 +20,10 @@ public class HLSController {
 
 
 
-    @PostMapping("/generate")
-    public String generate(@RequestBody ReqRes filmRequest) {
-        UUID uuid = filmRequest.getUuid();
+    @PostMapping("/generate/{uuid}")
+    public String generate(@PathVariable UUID uuid) {
         return hlsService.generate(uuid);
     }
+
 
 }
