@@ -8,7 +8,7 @@ Some setups in Ubuntu 22.04 LTS:
 - sudo apt update
 - sudo apt install ffmpeg
 - ffmpeg -version
-4. Compile the code with maven-wrapper to build into JAR with the follow command:
+4. Compile the code with maven-wrapper to build into JAR with the following command:
 -  ./mnvw 
-5. Send the file to your server and run the follow command:
+5. Send the file to your server and run the following command:
 -  java -jar "YOUR JAR FILE'S NAME" 
