@@ -15,8 +15,8 @@ public class HLSController {
 
     @Autowired
     private HLSService hlsService;
-    @Autowired
-    private FilmRepository filmRepository;
+/*    @Autowired
+    private FilmRepository filmRepository;*/
 
 
 

@@ -1,8 +1,10 @@
 com/example/filmStreaming/config/JWTAuthFilter.class
+com/example/filmStreaming/model/KeyPairSession.class
 com/example/filmStreaming/repository/OurUsersRepository.class
 com/example/filmStreaming/controller/AuthController.class
 com/example/filmStreaming/controller/AdminUser.class
 com/example/filmStreaming/service/AuthService.class
+com/example/filmStreaming/service/RSAEncryptPayload.class
 com/example/filmStreaming/model/OurUsers.class
 com/example/filmStreaming/controller/HLSController.class
 com/example/filmStreaming/FilmStreamingApplication.class
@@ -13,4 +15,5 @@ com/example/filmStreaming/service/HLSService.class
 com/example/filmStreaming/dto/ReqRes.class
 com/example/filmStreaming/service/JWTUtils.class
 com/example/filmStreaming/config/FilmConfig.class
+com/example/filmStreaming/service/KeyPairManager.class
 com/example/filmStreaming/service/OurUserDetailsService.class

@@ -34,6 +34,18 @@ public class Film {
     private String path;
 
     @Column(
+            name = "poster",
+            nullable = true,
+            columnDefinition = "TEXT"
+    )
+    private String poster;
+    @Column(
+            name = "releasedDate",
+            nullable = true,
+            columnDefinition = "TEXT"
+    )
+    private String releasedDate;
+    @Column(
             name = "description",
             nullable = true,
             columnDefinition = "TEXT"
@@ -41,12 +53,7 @@ public class Film {
 
     private String description;
 
-    @Column(
-            name = "poster",
-            nullable = true,
-            columnDefinition = "TEXT"
-    )
-    private String poster;
+
 
 
 }

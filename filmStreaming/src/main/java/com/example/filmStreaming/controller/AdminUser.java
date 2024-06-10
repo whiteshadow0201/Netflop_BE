@@ -29,9 +29,10 @@ public class AdminUser {
         return ResponseEntity.ok(films);
     }
 
-    @PostMapping("/user/getFilm")
-    public ResponseEntity<Object> getFilm(@RequestBody ReqRes reqRes) {
-        return ResponseEntity.ok(filmRepository.findPathByID(reqRes.getUuid()));
+    @GetMapping("/user/getFilm/{uuid}")
+    public ResponseEntity<Object> getFilm(@PathVariable UUID uuid) {
+        Optional<Film> film = filmRepository.findById(uuid);
+        return film.<ResponseEntity<Object>>map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 //
     @PostMapping("/admin/uploadFilmInfo")
@@ -45,6 +46,9 @@ public class AdminUser {
         if (filmRequest.getPoster()==null)
             filmToSave.setPoster("");
         else filmToSave.setPoster(filmRequest.getPoster());
+        if (filmRequest.getReleasedDate()==null)
+            filmToSave.setReleasedDate("");
+        else filmToSave.setReleasedDate(filmRequest.getReleasedDate());
         filmToSave.setFilmName(filmRequest.getFilmName());
         filmToSave.setPath("");
         Film savedFilm = filmRepository.save(filmToSave);
