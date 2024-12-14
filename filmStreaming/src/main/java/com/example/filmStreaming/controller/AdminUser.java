@@ -4,16 +4,23 @@ import com.example.filmStreaming.dto.ReqRes;
 import com.example.filmStreaming.model.Film;
 import com.example.filmStreaming.repository.FilmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.io.File;
@@ -123,5 +130,51 @@ public class AdminUser {
         // Trả về FileSystemResource cho tệp được yêu cầu
         return new FileSystemResource(fullPath);
     }
+
+    @Value("${keycloak.client.id}")
+    private String clientId;
+
+    @Value("${keycloak.client.secret}")
+    private String clientSecret;
+
+    @Value("${keycloak.logout.endpoint}")
+    private String logoutEndpoint;
+
+    private final WebClient webClient;
+    public AdminUser(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.build();
+    }
+
+    @PostMapping("/user/keyCloak/logout")
+    public ResponseEntity<String> keycloakLogout(@RequestBody Map<String, String> request ) {
+        try {
+                String refreshToken = request.get("refresh_token");
+                System.out.println(refreshToken);
+                MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+                formData.add("client_id", clientId); // client_id của ứng dụng
+                formData.add("refresh_token", refreshToken); // Refresh token từ Authorization header
+                formData.add("client_secret", clientSecret);
+                // Gửi yêu cầu logout đến Keycloak
+                Map<String, Object> response = webClient.post()
+                        .uri(logoutEndpoint)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .bodyValue(formData)
+                        .retrieve()
+                        .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                        .block();
+                System.out.println(response);
+            // Kiểm tra phản hồi từ Keycloak (nếu cần)
+            return ResponseEntity.ok("Logout successful");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during logout");
+        }
+    }
+    @PostMapping("/admin/test")
+    public ResponseEntity<String> testAdminrole(){
+        return ResponseEntity.status(HttpStatusCode.valueOf(200)).body("This is admin");
+    }
+
 
 }

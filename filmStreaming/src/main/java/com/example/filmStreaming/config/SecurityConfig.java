@@ -4,7 +4,7 @@ import com.example.filmStreaming.model.Film;
 import com.example.filmStreaming.model.OurUsers;
 import com.example.filmStreaming.repository.FilmRepository;
 import com.example.filmStreaming.repository.OurUsersRepository;
-import com.example.filmStreaming.service.OurUserDetailsService;
+//import com.example.filmStreaming.service.OurUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -25,21 +25,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private OurUserDetailsService ourUserDetailsService;
-
-    @Autowired
-    private JWTAuthFilter jwtAuthFilter;
+//    @Autowired
+//    private OurUserDetailsService ourUserDetailsService;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtAuthConverter jwtAuthConverter) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
@@ -49,8 +46,8 @@ public class SecurityConfig {
                         .requestMatchers("/user/**").hasAnyAuthority("user","admin")
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider()).addFilterBefore(
-                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter))
                 );
 
         return httpSecurity.build();
@@ -60,7 +57,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedOrigins(Arrays.asList("https://anotherk-atk.github.io","https://netflop.rf.gd"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("https://anotherk-atk.github.io","https://netflop.rf.gd","http://127.0.0.1:5501"));
         corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
 //        corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
 //                "Accept", "Authorization", "X-Requested-With",
@@ -74,42 +71,42 @@ public class SecurityConfig {
 
         return source;
     }
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(ourUserDetailsService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        return daoAuthenticationProvider;
-    }
+//    @Bean
+//    public AuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+//        daoAuthenticationProvider.setUserDetailsService(ourUserDetailsService);
+//        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+//        return daoAuthenticationProvider;
+//    }
+//
+//    @Bean
+//    public PasswordEncoder passwordEncoder()
+//    {
+//        return new BCryptPasswordEncoder();
+//    }
+//
+//    @Bean
+//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+//        return authenticationConfiguration.getAuthenticationManager();
+//    }
 
-    @Bean
-    public PasswordEncoder passwordEncoder()
-    {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    public CommandLineRunner addAdminAccount(  OurUsersRepository ourUserRepository )
-    {
-        return args ->
-        {
-            // Kiểm tra xem có người dùng admin nào tồn tại không
-
-            if (ourUserRepository.findByEmail("admin@123").isEmpty()) {
-                // Nếu không có, tạo một người dùng admin mặc định
-                OurUsers admin = new OurUsers(
-                        "phuc", // Tên người dùng admin
-                        "admin@123", // Email của admin
-                        passwordEncoder().encode("admin"), // Mã hóa mật khẩu admin
-                        "admin" // Vai trò của admin
-                );
-                ourUserRepository.save(admin);
-            }
-        };
-    }
+//    @Bean
+//    public CommandLineRunner addAdminAccount(  OurUsersRepository ourUserRepository )
+//    {
+//        return args ->
+//        {
+//            // Kiểm tra xem có người dùng admin nào tồn tại không
+//
+//            if (ourUserRepository.findByEmail("admin@123").isEmpty()) {
+//                // Nếu không có, tạo một người dùng admin mặc định
+//                OurUsers admin = new OurUsers(
+//                        "phuc", // Tên người dùng admin
+//                        "admin@123", // Email của admin
+//                        passwordEncoder().encode("admin"), // Mã hóa mật khẩu admin
+//                        "admin" // Vai trò của admin
+//                );
+//                ourUserRepository.save(admin);
+//            }
+//        };
+//    }
 }

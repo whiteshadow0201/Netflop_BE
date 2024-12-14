@@ -1,7 +1,7 @@
 package com.example.filmStreaming.test;
 
 import com.example.filmStreaming.dto.ReqRes;
-import com.example.filmStreaming.service.AuthService;
+//import com.example.filmStreaming.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
